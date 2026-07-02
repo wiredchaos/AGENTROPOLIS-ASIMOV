@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentropolis.local/schemas/body-registry.schema.json",
+  "title": "Agentropolis Asimov District Body Registry",
+  "type": "object",
+  "required": [
+    "body_id",
+    "name",
+    "model",
+    "operator",
+    "safety_status",
+    "permissions",
+    "shutdown_controls",
+    "audit"
+  ],
+  "properties": {
+    "body_id": {
+      "type": "string",
+      "description": "Unique district ID for the robot body."
+    },
+    "name": {
+      "type": "string"
+    },
+    "model": {
+      "type": "object",
+      "required": ["manufacturer_or_project", "model_name", "body_type"],
+      "properties": {
+        "manufacturer_or_project": { "type": "string" },
+        "model_name": { "type": "string" },
+        "body_type": {
+          "type": "string",
+          "enum": ["humanoid", "mobile_base", "arm", "drone", "quadruped", "custom", "other"]
+        },
+        "open_source": { "type": "boolean" },
+        "repository_url": { "type": "string" }
+      }
+    },
+    "parts_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["part_name", "category", "status"],
+        "properties": {
+          "part_name": { "type": "string" },
+          "category": { "type": "string" },
+          "vendor": { "type": "string" },
+          "part_number": { "type": "string" },
+          "quantity": { "type": "number" },
+          "status": {
+            "type": "string",
+            "enum": ["needed", "ordered", "received", "installed", "failed", "replaced"]
+          }
+        }
+      }
+    },
+    "firmware": {
+      "type": "object",
+      "properties": {
+        "version": { "type": "string" },
+        "last_updated": { "type": "string", "format": "date" },
+        "rollback_version": { "type": "string" }
+      }
+    },
+    "operator": {
+      "type": "object",
+      "required": ["owner", "primary_operator"],
+      "properties": {
+        "owner": { "type": "string" },
+        "primary_operator": { "type": "string" },
+        "backup_operator": { "type": "string" },
+        "training_status": {
+          "type": "string",
+          "enum": ["untrained", "training", "approved", "suspended"]
+        }
+      }
+    },
+    "safety_status": {
+      "type": "object",
+      "required": ["class", "inspection_status"],
+      "properties": {
+        "class": {
+          "type": "string",
+          "enum": ["class_0_display", "class_1_demo", "class_2_teleop", "class_3_assisted", "class_4_restricted", "class_5_prohibited_review"]
+        },
+        "inspection_status": {
+          "type": "string",
+          "enum": ["not_inspected", "passed", "failed", "expired", "suspended"]
+        },
+        "last_inspection_date": { "type": "string", "format": "date" },
+        "risk_notes": { "type": "string" }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "allowed_tasks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "restricted_tasks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "geofence": { "type": "string" },
+        "requires_human_approval": { "type": "boolean" },
+        "wallet_access_allowed": { "type": "boolean" }
+      }
+    },
+    "shutdown_controls": {
+      "type": "object",
+      "required": ["local_estop", "remote_shutdown", "operator_override"],
+      "properties": {
+        "local_estop": { "type": "boolean" },
+        "remote_shutdown": { "type": "boolean" },
+        "operator_override": { "type": "boolean" },
+        "power_isolation_procedure": { "type": "string" },
+        "network_disconnect_procedure": { "type": "string" }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "deployment_log_url": { "type": "string" },
+        "maintenance_log_url": { "type": "string" }
+      }
+    }
+  }
+}
