@@ -1,0 +1,212 @@
+openapi: 3.1.0
+info:
+  title: Agentropolis Asimov Robotics API
+  version: 0.1.0
+  description: |
+    Open-source robotics API for Asimov District.
+    This API exposes robot registry, safety, simulation, deployment, maintenance, and resource discovery endpoints.
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: API is healthy
+  /robots:
+    get:
+      summary: List robot bodies
+      responses:
+        "200":
+          description: Robot list
+    post:
+      summary: Register a robot body
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RobotBody"
+      responses:
+        "201":
+          description: Robot registered
+  /robots/{body_id}:
+    get:
+      summary: Get robot body profile
+      parameters:
+        - $ref: "#/components/parameters/BodyId"
+      responses:
+        "200":
+          description: Robot profile
+  /robots/{body_id}/capabilities:
+    get:
+      summary: List robot capabilities
+      parameters:
+        - $ref: "#/components/parameters/BodyId"
+      responses:
+        "200":
+          description: Capability list
+  /robots/{body_id}/telemetry:
+    get:
+      summary: Read robot telemetry
+      parameters:
+        - $ref: "#/components/parameters/BodyId"
+      responses:
+        "200":
+          description: Telemetry payload
+  /robots/{body_id}/safety/preflight:
+    post:
+      summary: Run preflight safety check
+      parameters:
+        - $ref: "#/components/parameters/BodyId"
+      responses:
+        "200":
+          description: Preflight result
+  /robots/{body_id}/safety/estop:
+    post:
+      summary: Trigger emergency stop
+      parameters:
+        - $ref: "#/components/parameters/BodyId"
+      responses:
+        "202":
+          description: Emergency stop requested
+  /robots/{body_id}/safety/shutdown:
+    post:
+      summary: Request remote shutdown
+      parameters:
+        - $ref: "#/components/parameters/BodyId"
+      responses:
+        "202":
+          description: Shutdown requested
+  /sim/tasks:
+    post:
+      summary: Run a simulated robot task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskRequest"
+      responses:
+        "202":
+          description: Simulation started
+  /deployments:
+    post:
+      summary: Request robot deployment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeploymentRequest"
+      responses:
+        "202":
+          description: Deployment request created
+  /maintenance/events:
+    post:
+      summary: Log maintenance event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceEvent"
+      responses:
+        "201":
+          description: Maintenance event logged
+  /resources/open-source:
+    get:
+      summary: List open-source robotics resources
+      responses:
+        "200":
+          description: Resource list
+components:
+  parameters:
+    BodyId:
+      name: body_id
+      in: path
+      required: true
+      schema:
+        type: string
+  schemas:
+    RobotBody:
+      type: object
+      required:
+        - body_id
+        - name
+        - model
+        - operator
+        - safety_status
+      properties:
+        body_id:
+          type: string
+        name:
+          type: string
+        model:
+          type: string
+        operator:
+          type: string
+        safety_status:
+          type: string
+          enum:
+            - not_inspected
+            - passed
+            - failed
+            - suspended
+        allowed_tasks:
+          type: array
+          items:
+            type: string
+    TaskRequest:
+      type: object
+      required:
+        - body_id
+        - task_name
+        - environment
+      properties:
+        body_id:
+          type: string
+        task_name:
+          type: string
+        environment:
+          type: string
+        requires_human_approval:
+          type: boolean
+          default: true
+    DeploymentRequest:
+      type: object
+      required:
+        - body_id
+        - task_name
+        - location
+        - requested_by
+      properties:
+        body_id:
+          type: string
+        task_name:
+          type: string
+        location:
+          type: string
+        requested_by:
+          type: string
+        risk_notes:
+          type: string
+    MaintenanceEvent:
+      type: object
+      required:
+        - body_id
+        - event_type
+        - notes
+      properties:
+        body_id:
+          type: string
+        event_type:
+          type: string
+        parts_used:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
