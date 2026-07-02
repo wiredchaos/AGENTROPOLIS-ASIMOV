@@ -1,0 +1,131 @@
+{
+  "name": "agentropolis-asimov-robotics-mcp",
+  "version": "0.1.0",
+  "description": "Robotics MCP tool manifest for Asimov District. Agents request robot actions through policy gates, not direct control.",
+  "safety_model": "human_authority_first",
+  "tool_groups": {
+    "registry": [
+      {
+        "name": "robot.list",
+        "description": "List registered robot bodies."
+      },
+      {
+        "name": "robot.get",
+        "description": "Get one robot body profile by body_id."
+      },
+      {
+        "name": "robot.register",
+        "description": "Register a robot body in the Asimov District body registry. Requires operator approval."
+      },
+      {
+        "name": "robot.update_status",
+        "description": "Update robot status, inspection state, or deployment state."
+      }
+    ],
+    "capabilities": [
+      {
+        "name": "capability.list",
+        "description": "List capabilities for a robot body."
+      },
+      {
+        "name": "capability.request",
+        "description": "Request use of a robot capability through policy and safety gates."
+      }
+    ],
+    "safety": [
+      {
+        "name": "safety.preflight",
+        "description": "Run preflight checks before a task."
+      },
+      {
+        "name": "safety.estop",
+        "description": "Trigger emergency stop. Must be available to operators at all times."
+      },
+      {
+        "name": "safety.remote_shutdown",
+        "description": "Request remote shutdown."
+      },
+      {
+        "name": "safety.audit_status",
+        "description": "Read safety, inspection, and audit state."
+      }
+    ],
+    "simulation": [
+      {
+        "name": "sim.run_task",
+        "description": "Run a robot task in simulation before physical deployment."
+      },
+      {
+        "name": "sim.validate_task",
+        "description": "Validate task output against safety criteria."
+      },
+      {
+        "name": "sim.report",
+        "description": "Generate simulation test report."
+      }
+    ],
+    "deployment": [
+      {
+        "name": "deployment.request",
+        "description": "Request a real-world robot deployment. Requires policy evaluation."
+      },
+      {
+        "name": "deployment.approve",
+        "description": "Human approval for a deployment request."
+      },
+      {
+        "name": "deployment.deny",
+        "description": "Deny a deployment request with reason."
+      },
+      {
+        "name": "deployment.log_event",
+        "description": "Append a deployment event to audit log."
+      }
+    ],
+    "maintenance": [
+      {
+        "name": "maintenance.log",
+        "description": "Log maintenance, repair, or calibration event."
+      },
+      {
+        "name": "maintenance.schedule",
+        "description": "Schedule maintenance or inspection."
+      },
+      {
+        "name": "maintenance.parts_needed",
+        "description": "List parts needed for repair or build completion."
+      }
+    ],
+    "resources": [
+      {
+        "name": "resources.open_source.list",
+        "description": "List open-source robotics resources and adapter candidates."
+      },
+      {
+        "name": "resources.open_source.check_license",
+        "description": "Check license compatibility before adding a resource."
+      }
+    ]
+  },
+  "blocked_by_default": [
+    "weapons",
+    "restraint",
+    "law_enforcement",
+    "medical_decisions",
+    "unsupervised_childcare",
+    "unsupervised_eldercare",
+    "hazardous_materials",
+    "public_road_autonomy",
+    "unapproved_wallet_spending"
+  ],
+  "approval_required_for": [
+    "physical_motion",
+    "human_proximity_operation",
+    "camera_recording",
+    "microphone_recording",
+    "wallet_access",
+    "new_environment_deployment",
+    "firmware_update",
+    "permission_escalation"
+  ]
+}
