@@ -1,0 +1,27 @@
+{
+  "name": "agentropolis-asimov-robotics-mcp",
+  "version": "0.1.0",
+  "description": "Open-source Robotics MCP and API for Agentropolis Asimov District.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "check": "node src/server.js --check"
+  },
+  "keywords": [
+    "agentropolis",
+    "robotics",
+    "mcp",
+    "ros2",
+    "open-source",
+    "humanoid",
+    "safety"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {}
+}
