@@ -1,0 +1,185 @@
+district:
+  name: ASIMOV
+  role: Open robotics, embodied intelligence, and physical-agent governance
+  layer: district
+  identity: Where agents get bodies under governance
+
+control_plane:
+  name: ASIMOV-CLOUD
+  role: Open cloud control plane for embodied agents
+  tier: infrastructure
+  deployment:
+    - managed
+    - sovereign
+  access_models:
+    - BYOK
+    - BYOH
+  core:
+    robot_runtime: ROS-2
+    cloud_compute: FogROS2
+    secure_transport: Zenoh
+    fleet_orchestration: Open-RMF
+    motion_planning: MoveIt-2
+    container_platform: Kubernetes
+    database: PostgreSQL
+    object_storage: MinIO
+    telemetry: OpenTelemetry
+    dashboards: Grafana
+    logs: Loki
+
+skills:
+  - name: ASIMOV-SENSE
+    role: Build a current model of the physical environment
+    tier: core
+    triggers:
+      - inspect the environment
+      - identify nearby objects
+      - validate the workspace
+    chains_to:
+      - ASIMOV-PLAN
+      - ASIMOV-GUARD
+
+  - name: ASIMOV-PLAN
+    role: Convert user intent into bounded physical task graphs
+    tier: core
+    triggers:
+      - plan this robot task
+      - break this physical job into steps
+    chains_to:
+      - ASIMOV-GUARD
+      - ASIMOV-MOVE
+      - ASIMOV-GRASP
+
+  - name: ASIMOV-GUARD
+    role: Apply risk classes, permission gates, and safety constraints
+    tier: core
+    triggers:
+      - check whether this action is allowed
+      - approve this physical task
+      - assign a robotics risk class
+    chains_to:
+      - MCP-RANGER
+      - ASIMOV-AUDIT
+
+  - name: ASIMOV-GRASP
+    role: Select grip, pressure, hand pose, and release behavior
+    tier: extended
+    triggers:
+      - pick this up
+      - choose a safe grip
+      - manipulate this object
+    chains_to:
+      - ASIMOV-AUDIT
+
+  - name: ASIMOV-MOVE
+    role: Control navigation and body positioning around people and objects
+    tier: extended
+    triggers:
+      - move the robot
+      - navigate to this location
+      - position the body safely
+    chains_to:
+      - ASIMOV-AUDIT
+
+  - name: ASIMOV-TELEOP
+    role: Open a declared and auditable human teleoperation session
+    tier: core
+    triggers:
+      - take manual control
+      - request an operator
+      - switch to supervised mode
+    requires:
+      - authenticated_operator
+      - declared_sensor_scope
+      - session_timeout
+    chains_to:
+      - ASIMOV-AUDIT
+
+  - name: ASIMOV-AUDIT
+    role: Record intent, approvals, observations, actions, failures, and outcomes
+    tier: infrastructure
+    triggers:
+      - show the robot audit log
+      - record this deployment
+      - explain what happened during the run
+
+adapters:
+  - name: ASIMOV-ADAPTER-1X
+    provider: 1X Technologies
+    access_model: BYOK
+    role: Connect user-owned commercial 1X robotics access to the grid
+    requires:
+      - user_supplied_credentials
+      - registered_robot_id
+      - scoped_permissions
+      - emergency_stop_channel
+
+  - name: ASIMOV-ADAPTER-ROS2
+    provider: open
+    access_model: BYOH
+    role: Connect generic ROS 2 hardware to ASIMOV Cloud
+    requires:
+      - ros2_edge_runtime
+      - registered_body_id
+      - local_safety_controller
+      - emergency_stop
+
+  - name: ASIMOV-ADAPTER-RUKA
+    provider: open
+    access_model: BYOH
+    role: Connect a RUKA-compatible dexterous hand
+    requires:
+      - calibrated_hand
+      - ros2_controller
+      - local_force_limits
+
+  - name: ASIMOV-ADAPTER-ORCA
+    provider: open
+    access_model: BYOH
+    role: Connect an ORCA-compatible dexterous hand
+    requires:
+      - calibrated_hand
+      - ros2_controller
+      - local_force_limits
+
+  - name: ASIMOV-ADAPTER-SIM
+    provider: open
+    access_model: local
+    role: Execute tasks against an approved simulator before physical deployment
+    requires:
+      - simulation_profile
+      - test_scenario
+      - pass_fail_criteria
+
+risk_classes:
+  A0:
+    name: observe
+    rule: automatic within declared sensor scope
+  A1:
+    name: low-risk action
+    rule: automatic within approved policy
+  A2:
+    name: controlled action
+    rule: environment validation required
+  A3:
+    name: sensitive action
+    rule: explicit human approval required
+  A4:
+    name: prohibited action
+    rule: blocked
+
+governance:
+  principles:
+    - attributable
+    - permissioned
+    - interruptible
+    - observable
+    - auditable
+    - reversible_when_physically_possible
+  edge_requirements:
+    - emergency_stop
+    - safe_state_on_disconnect
+    - command_expiry
+    - signed_command_envelopes
+    - local_velocity_and_force_limits
+    - local_refusal_of_invalid_commands
