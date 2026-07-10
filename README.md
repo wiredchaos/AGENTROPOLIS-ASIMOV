@@ -1,47 +1,145 @@
 # AGENTROPOLIS ASIMOV DISTRICT
 
-**ASIMOV DISTRICT** is the robotics and embodiment layer of Agentropolis.
+**ASIMOV DISTRICT** is the robotics, embodiment, and physical-agent governance layer of Agentropolis.
 
-This repo defines the open-source humanoid robotics district where agents do not stay trapped on screens. They can be assembled, tested, governed, repaired, simulated, and deployed into physical workflows with human oversight.
+This repository defines the open-source district where agents do not stay trapped on screens. They can be simulated, assembled, connected to cloud intelligence, governed, repaired, audited, and deployed into physical workflows with human oversight.
 
 > Build the body. Govern the mind.
 
 ## Core Thesis
 
-Agentropolis needs a dedicated robotics district because physical agents are not just software.
+Physical agents are not just software.
 
 They require:
 
-- parts sourcing
+- hardware and parts sourcing
 - build documentation
-- repair workflows
+- robot identity and ownership
+- repair and maintenance workflows
 - safety testing
 - operator permissions
 - human-in-the-loop controls
+- cloud and edge coordination
 - deployment logs
-- kill switches
+- emergency stops
 - insurance and compliance planning
-- embodied agent governance
+- embodied-agent governance
 
-Asimov District is the zone where open robotics meets agentic coordination.
+ASIMOV is where open robotics meets agentic coordination.
 
 ## District Purpose
 
-Asimov District helps builders move from:
+ASIMOV helps builders move from:
 
 ```text
-AI chat agent -> tool-using agent -> simulated worker -> robotic operator -> governed physical agent
+AI chat agent
+  -> tool-using agent
+  -> simulated worker
+  -> cloud-connected robot
+  -> governed physical agent
 ```
 
 The goal is not uncontrolled autonomy.
 
-The goal is useful robotics with clear boundaries, auditable actions, and human authority.
+The goal is useful robotics with clear boundaries, auditable actions, local safety authority, and human command.
+
+## District Architecture
+
+```text
+AGENTROPOLIS INTELLIGENCE GRID
+        -> HERMES / Agent Runtime
+        -> ASIMOV Cloud Control Plane
+        -> Governance and Approval Layer
+        -> Open-RMF Task and Fleet Dispatch
+        -> Zenoh Secure Data Fabric
+        -> ROS 2 Edge Runtime
+        -> Robot, Arm, Hand, Sensor Rig, or Simulator
+        -> ASIMOV Audit Ledger
+```
+
+Heavy workloads can be offloaded through FogROS2 while final physical safety remains on the robot.
+
+## Access Models
+
+### BYOK — Bring Your Own Key
+
+Used for commercial robotics providers and external cloud accounts.
+
+The user supplies and retains control of:
+
+- provider credentials
+- cloud credentials
+- robot or fleet identifiers
+- provider billing
+- permission scopes
+
+Commercial providers are adapters inside ASIMOV. They do not own the district or bypass Agentropolis governance.
+
+Initial commercial adapter:
+
+- `ASIMOV-ADAPTER-1X`
+
+### BYOH — Bring Your Own Hardware
+
+Used for open-source or custom ROS 2 hardware.
+
+The user controls:
+
+- robot body
+- firmware
+- controller computer
+- model weights
+- telemetry
+- maintenance history
+- network access
+
+Initial open adapters:
+
+- `ASIMOV-ADAPTER-ROS2`
+- `ASIMOV-ADAPTER-RUKA`
+- `ASIMOV-ADAPTER-ORCA`
+- `ASIMOV-ADAPTER-SIM`
+
+## ASIMOV Cloud
+
+ASIMOV Cloud is the open-source, hardware-neutral control plane for embodied agents.
+
+| Layer | Default component | Responsibility |
+|---|---|---|
+| Robot runtime | ROS 2 | Drivers, services, actions, and local execution |
+| Cloud offload | FogROS2 | Remote CPU and GPU workloads |
+| Fleet orchestration | Open-RMF | Task dispatch, traffic, charging, and fleet adapters |
+| Secure transport | Zenoh | Robot-to-cloud data fabric |
+| Motion planning | MoveIt 2 | Manipulation and trajectory planning |
+| Simulation | Gazebo / MuJoCo | Simulation-first validation and digital twins |
+| Container platform | Kubernetes | Deployment, scaling, and recovery |
+| Database | PostgreSQL | Registry, permissions, and job metadata |
+| Object storage | MinIO | Models, reports, recordings, and sensor artifacts |
+| Telemetry | OpenTelemetry | Traces, metrics, and execution evidence |
+| Dashboards | Grafana | Fleet health and task monitoring |
+| Logs | Loki | Searchable operational history |
+
+Full architecture: [`docs/asimov-cloud-architecture.md`](docs/asimov-cloud-architecture.md)
+
+Machine-readable registry: [`registry/asimov-cloud.yaml`](registry/asimov-cloud.yaml)
+
+## Core Skills
+
+| Skill | Role |
+|---|---|
+| `ASIMOV-SENSE` | Build a current model of the physical environment |
+| `ASIMOV-PLAN` | Convert intent into bounded physical task graphs |
+| `ASIMOV-GUARD` | Apply risk classes, permissions, and safety gates |
+| `ASIMOV-GRASP` | Select grip, pressure, hand pose, and release behavior |
+| `ASIMOV-MOVE` | Control navigation and body positioning |
+| `ASIMOV-TELEOP` | Open a declared and auditable human-control session |
+| `ASIMOV-AUDIT` | Record intent, approvals, actions, failures, and outcomes |
 
 ## Primary Modules
 
 ### 1. Robotics Assembly Lab
 
-A build environment for humanoid robots, mobile robots, grippers, sensor rigs, and custom embodied agent hardware.
+A build environment for humanoid robots, mobile robots, grippers, sensor rigs, and custom embodied-agent hardware.
 
 Initial focus:
 
@@ -67,6 +165,8 @@ Each body should have:
 - safety constraints
 - inspection status
 - deployment history
+- edge runtime status
+- shutdown procedure
 
 ### 3. Skill Upload Training Rooms
 
@@ -81,8 +181,8 @@ Examples:
 - delivery route
 - cleaning routine
 - warehouse assist
-- elder support workflow
-- classroom demo mode
+- elder-support workflow
+- classroom demonstration mode
 
 No skill should graduate to live physical use without simulation, checklist review, and human approval.
 
@@ -94,16 +194,18 @@ Required checks:
 
 - emergency stop works
 - remote shutdown works
+- safe state activates on disconnect
 - geofence works
-- speed limit works
+- speed and force limits work
 - collision detection works
 - human proximity rules work
+- command expiry works
 - logging works
 - permission scope is correct
 
 ### 5. Repair Bay
 
-A maintenance and parts management system for robots.
+A maintenance and parts-management system for robots.
 
 Tracks:
 
@@ -135,29 +237,71 @@ Possible categories:
 
 ### 7. Governance Console
 
-The layer that keeps embodied agents aligned with the rules of Agentropolis.
+The layer that keeps embodied agents aligned with Agentropolis rules.
 
-It should answer:
+It must answer:
 
 - Who owns this robot?
-- Who is allowed to operate it?
+- Who may operate it?
 - What can it do?
 - Where can it go?
 - What tools can it access?
-- What actions require approval?
-- How do we shut it down?
+- Which actions require approval?
+- Which cloud or provider credentials are active?
+- How do we stop it?
 - What happened during the last run?
+
+## Execution Chain
+
+```text
+User request
+   -> HERMES interprets intent
+   -> ASIMOV-PLAN creates task graph
+   -> ASIMOV-GUARD assigns risk class
+   -> human approval when required
+   -> ASIMOV-SENSE validates environment
+   -> provider adapter opens scoped session
+   -> Open-RMF dispatches task
+   -> robot-side controller validates command
+   -> physical execution
+   -> ASIMOV-AUDIT records evidence
+```
+
+## Risk Classes
+
+| Class | Meaning | Rule |
+|---|---|---|
+| A0 | Observe | Automatic within declared sensor scope |
+| A1 | Low-risk action | Automatic within approved policy |
+| A2 | Controlled action | Environment validation required |
+| A3 | Sensitive action | Explicit human approval required |
+| A4 | Prohibited action | Blocked |
+
+## Teleoperation Doctrine
+
+Teleoperation is a declared execution mode, never a hidden fallback.
+
+Every teleoperation session must record:
+
+- operator identity
+- start and stop time
+- why autonomy stopped
+- granted camera and sensor access
+- commands issued
+- objects or zones touched
+- session outcome
 
 ## Agentropolis Integration
 
-Asimov District connects to:
+ASIMOV connects to:
 
-- **HERMES CITY** as the mini orchestration city
+- **HERMES CITY** as the orchestration city
 - **AGENTROPOLIS** as the master city-scale architecture
 - **AGENTROPOLIS AGENT MCP** for agent tooling and interfaces
+- **MCP RANGER** for permission and risk governance
 - **Agent wallets** for controlled commerce and machine payments
-- **Governance layers** for auditability and permissions
 - **Simulation districts** before physical-world deployment
+- **Audit and memory layers** for traceability and learning
 
 ## Operating Principles
 
@@ -168,60 +312,73 @@ Asimov District connects to:
 5. Safety checks are infrastructure, not vibes.
 6. Embodied agents need inspections like vehicles, not prompts like chatbots.
 7. Open robotics should be accessible, but never lawless.
+8. Cloud intelligence must not replace robot-side safety authority.
+9. Provider credentials never equal unrestricted authorization.
+10. Every live action must be attributable, interruptible, observable, and auditable.
 
-## Initial Roadmap
+## Roadmap
 
 ### Phase 0: Doctrine Lock
 
-- Define district mission
-- Create safety doctrine
-- Create body registry schema
-- Create deployment checklist
-- Create README and build map
+- define district mission
+- create safety doctrine
+- create body registry schema
+- create deployment checklist
+- create README and build map
 
 ### Phase 1: Open Robotics Research Layer
 
-- Track open-source humanoid projects
-- Compare DIY kit options
-- Build bill of materials templates
-- Create parts sourcing database
-- Create operator training outline
+- track open-source humanoid projects
+- compare DIY kit options
+- build bill of materials templates
+- create parts sourcing database
+- create operator training outline
 
 ### Phase 2: Simulation First
 
-- Add simulated robot task flows
-- Define safe task library
-- Connect virtual district to Agentropolis city map
-- Build approval gates for skill deployment
+- add simulated robot task flows
+- define safe task library
+- connect virtual district to Agentropolis city map
+- build approval gates for skill deployment
+- add `ASIMOV-ADAPTER-SIM`
 
-### Phase 3: Physical Pilot
+### Phase 3: ASIMOV Cloud MVP
 
-- Register first robot body
-- Assemble first kit or prototype
-- Run safety arena tests
-- Deploy only non-critical low-risk tasks
-- Document every failure and improvement
+- deploy ROS 2 edge reference node
+- connect Zenoh secure transport
+- add FogROS2 cloud offload profile
+- register Open-RMF task dispatcher
+- launch PostgreSQL registry and audit store
+- add Grafana fleet dashboard
 
-### Phase 4: District Marketplace
+### Phase 4: Physical Pilot
 
-- Parts marketplace
-- Repair vendors
-- Operator certification
-- Builder profiles
-- Robotics education portal
+- register first robot body
+- assemble first kit or prototype
+- run safety arena tests
+- deploy only non-critical low-risk tasks
+- document every failure and improvement
 
-## Repo Status
+### Phase 5: District Marketplace
 
-This repository is the canonical planning and doctrine layer for the Agentropolis robotics district.
+- parts marketplace
+- repair vendors
+- operator certification
+- builder profiles
+- robotics education portal
 
-Core files:
+## Repository Map
 
-- `docs/asimov-district-blueprint.md`
-- `docs/safety-doctrine.md`
-- `schemas/body-registry.schema.json`
-- `checklists/deployment-checklist.md`
-- `checklists/build-checklist.md`
+- [`docs/asimov-district-blueprint.md`](docs/asimov-district-blueprint.md)
+- [`docs/asimov-cloud-architecture.md`](docs/asimov-cloud-architecture.md)
+- [`docs/safety-doctrine.md`](docs/safety-doctrine.md)
+- [`registry/asimov-cloud.yaml`](registry/asimov-cloud.yaml)
+- [`schemas/body-registry.schema.json`](schemas/body-registry.schema.json)
+- [`checklists/deployment-checklist.md`](checklists/deployment-checklist.md)
+- [`checklists/build-checklist.md`](checklists/build-checklist.md)
 
-## One-Line Identity
+## Canon Lock
 
-**Asimov District is where agents get bodies, but only under governance.**
+ASIMOV is the district. ASIMOV Cloud is its open control plane. Commercial robotics companies are optional adapters. Open ROS 2 hardware enters through BYOH. External providers and cloud accounts enter through BYOK.
+
+**ASIMOV District is where agents get bodies, but only under governance.**
